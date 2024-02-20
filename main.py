@@ -24,13 +24,16 @@ class SpeedTest():
 			p = ping(timeout=self.nextInterval())
 			data[5:8] = str(p.avgPing), str(p.maxPing), str(p.minPing), str(p.packetLoss) + "%"
 
-			print("Starting Speed Test")
-			st = speedtestCLI(self.Server)
-			print(st.exitCode)
-			if st.exitCode == 0:
-				data[1:5] = str(st.serverName), str(round(int(st.downloadSpeed) / 125000, 2)), str(round(int(st.uploadSpeed) / 125000, 2)), str(st.packetLoss) + "%", str(st.shareUrl)
-			else:
-				data[10] = str(st.error)
+			count = 0
+			while count < 3:
+				print("Starting Speed Test")
+				st = speedtestCLI(self.Server)
+				if st.exitCode == 0:
+					data[1:5] = str(st.serverName), str(round(int(st.downloadSpeed) / 125000, 2)), str(round(int(st.uploadSpeed) / 125000, 2)), str(st.packetLoss) + "%", str(st.shareUrl)
+					count = 3
+				else:
+					data[10] = str(st.error)
+					count += 1
 
 			data[0] = datetime.datetime.now()
 			print("\n" * 100)
