@@ -10,7 +10,7 @@ class SpeedTest():
 	def __init__(self):
 		####################
 		self.Interval = [1, 0, 0] #Hours Minutes Seconds, the total of all the time is how long inbetween speedtests
-		self.Server = None
+		self.Server = 48175
 		#################### TODO make better interface, maybe config file that stores it which can be updated on startup.
 
 		self.dataH = databaseHandler()
@@ -22,14 +22,14 @@ class SpeedTest():
 			print("It is currently safe to exit the script. (CTRL + C)")
 			data = ["", "", "", "", "", "", "", "", "", ""]
 			p = ping(timeout=self.nextInterval())
-			data[5:8] = str(p.avgPing), str(p.maxPing), str(p.minPing), str(p.packetLoss) + "%"
+			data[5:8] = str(p.avgPing), str(p.maxPing), str(p.minPing), str(round(float(p.packetLoss), 1)) + "%"
 
 			count = 0
 			while count < 3:
 				print("Starting Speed Test")
 				st = speedtestCLI(self.Server)
 				if st.exitCode == 0:
-					data[1:5] = str(st.serverName), str(round(int(st.downloadSpeed) / 125000, 2)), str(round(int(st.uploadSpeed) / 125000, 2)), str(st.packetLoss) + "%", str(st.shareUrl)
+					data[1:5] = str(st.serverName), str(round(int(st.downloadSpeed) / 125000, 2)), str(round(int(st.uploadSpeed) / 125000, 2)), str(round(float(st.packetLoss), 1)) + "%", str(st.shareUrl)
 					count = 3
 				else:
 					data[10] = str(st.error)
